@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyChat — Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body class="auth-page">
+  <div class="auth-shell">
+    <header class="auth-banner">
+      <div class="auth-app-icon" aria-hidden="true">💬</div>
+      <h1>PyChat Web</h1>
+      <p>Groups, file sharing &amp; an AI sidekick — built with Python, Flask &amp; Socket.IO</p>
+    </header>
+
+    <div class="auth-card">
+      <nav class="auth-tabs">
+        <a href="{{ url_for('auth_page') }}"
+           class="{{ 'active' if tab != 'register' }}">Log in</a>
+        <a href="{{ url_for('auth_page', tab='register') }}"
+           class="{{ 'active' if tab == 'register' }}">Sign up</a>
+      </nav>
+
+      {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+
+      <form method="post"
+            action="{{ url_for('register') if tab == 'register' else url_for('login') }}">
+        <label for="username">Username</label>
+        <input id="username" name="username" required autocomplete="username"
+               placeholder="e.g. priya_123"
+               value="{{ form.get('username', '') if form else '' }}" />
+
+        {% if tab == 'register' %}
+        <label for="display_name">Your name</label>
+        <input id="display_name" name="display_name" required maxlength="40"
+               placeholder="e.g. Priya Sharma"
+               value="{{ form.get('display_name', '') if form else '' }}" />
+        {% endif %}
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required
+               autocomplete="{{ 'new-password' if tab == 'register' else 'current-password' }}"
+               placeholder="{{ 'At least 6 characters' if tab == 'register' else 'Your password' }}" />
+
+        <button class="btn-primary" type="submit">
+          {{ 'Create account' if tab == 'register' else 'Log in' }}
+        </button>
+      </form>
+
+      <p class="auth-foot">
+        Demo only &mdash; accounts, messages and files live on this computer.
+        Ask <strong style="color:#00a884">PyBot</strong> anything once you're in.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

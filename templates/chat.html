@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyChat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body class="chat-page">
+  <div class="layout" id="layout">
+
+    <!-- ===================== sidebar ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <header class="side-header">
+        <div class="me">
+          <span class="avatar me-avatar" style="background: {{ me.avatar_color }}">{{ me.display_name[0]|upper }}</span>
+          <div class="me-text">
+            <div class="me-name">{{ me.display_name }}</div>
+            <div class="me-status">Available</div>
+          </div>
+        </div>
+        <div class="side-actions">
+          <button class="icon-btn" id="new-group-btn" title="New group">👥</button>
+          <button class="icon-btn" id="new-chat-btn" title="New chat">✏️</button>
+          <a class="icon-btn" href="{{ url_for('logout') }}" title="Log out">🚪</a>
+        </div>
+      </header>
+
+      <div class="search-row">
+        <input id="search" type="text" placeholder="Search or start a new chat"
+               autocomplete="off" />
+      </div>
+
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="chats" type="button">Chats</button>
+        <button class="tab" data-tab="groups" type="button">
+          Groups <span class="tab-badge" id="grp-badge" hidden>0</span>
+        </button>
+        <button class="tab" data-tab="requests" type="button">
+          Requests <span class="tab-badge" id="req-badge" hidden>0</span>
+        </button>
+        <button class="tab" data-tab="people" type="button">People</button>
+      </div>
+      <div class="chat-list" id="chat-list"></div>
+      <div class="toasts" id="toasts"></div>
+    </aside>
+
+    <!-- ===================== chat pane ===================== -->
+    <section class="chat-pane" id="chat-pane">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-logo">💬</div>
+        <h2>PyChat Web</h2>
+        <p>
+          Select a chat from the sidebar, start a group, or talk to
+          <strong>PyBot</strong>, the built-in assistant.<br />
+          Drag &amp; drop files straight into a conversation to share them.
+        </p>
+        <div class="empty-pills">
+          <span>👥 Groups</span><span>📎 Files up to 25 MB</span><span>🤖 PyBot AI</span>
+        </div>
+      </div>
+
+      <div class="conversation" id="conversation" hidden>
+        <header class="chat-header">
+          <button class="icon-btn back-btn" id="back-btn" title="Back">←</button>
+          <span class="avatar" id="chat-avatar">?</span>
+          <div class="chat-who">
+            <div class="chat-name" id="chat-name"></div>
+            <div class="chat-status" id="chat-status"></div>
+          </div>
+          <div class="chat-actions" id="chat-actions" hidden>
+            <button class="icon-btn" id="add-member-btn" title="Add members">➕</button>
+            <button class="icon-btn" id="leave-group-btn" title="Leave group">🚪</button>
+          </div>
+        </header>
+
+        <div class="messages" id="messages"></div>
+
+        <div class="drop-hint" id="drop-hint" hidden>
+          <div class="drop-box">📎<br />Drop files here to send</div>
+        </div>
+
+        <div class="emoji-tray" id="emoji-tray" hidden></div>
+
+        <div class="upload-bar" id="upload-bar" hidden>
+          <span class="upload-name" id="upload-name">file.png</span>
+          <span class="upload-track"><span class="upload-fill" id="upload-fill"></span></span>
+          <span class="upload-pct" id="upload-pct">0%</span>
+        </div>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <button type="button" class="icon-btn" id="emoji-btn" title="Emoji">😊</button>
+          <button type="button" class="icon-btn" id="attach-btn" title="Attach a file">📎</button>
+          <input type="file" id="file-input" hidden />
+          <input id="text" type="text" maxlength="4000" placeholder="Type a message" />
+          <button class="send-btn" type="submit" title="Send">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== modal (new group / add members) ===================== -->
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <span class="modal-icon" id="modal-icon">👥</span>
+        <h3 id="modal-title">New group</h3>
+        <button class="icon-btn" id="modal-close" title="Close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-actions">
+        <button class="row-btn ghost" id="modal-cancel" type="button">Cancel</button>
+        <button class="row-btn" id="modal-ok" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.ME = {{ {"id": me.id, "username": me.username,
+                    "display_name": me.display_name,
+                    "avatar_color": me.avatar_color} | tojson }};
+    window.BOT = {{ (bot or none) | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

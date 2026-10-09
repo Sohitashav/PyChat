@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / local config
+.env
+
+# Leftover local test page (not part of PyChat)
+_check.html
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
