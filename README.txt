@@ -73,7 +73,7 @@ TROUBLESHOOTING
 - START.bat says PyChat is not set up yet: run SETUP.bat first.
 - Tunnel window shows errors or no link: your network may block it.
   Use START-LOCAL.bat instead — it runs the chat on this computer only
-  at http://127.0.0.1:5000 (good for testing, or both of you on the
+  at http://127.0.0.1:**** (good for testing, or both of you on the
   same Wi-Fi/network).
 - "Port 5000 is already in use": another copy of PyChat is running.
   Close the other "PyChat server" window and run START.bat again.
